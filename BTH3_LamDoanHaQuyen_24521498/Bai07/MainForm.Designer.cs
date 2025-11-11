@@ -1,0 +1,148 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Bai07
+{
+    partial class MainForm
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private TableLayoutPanel seatsGrid;
+        private TextBox txtThanhTien;
+
+        private void InitializeComponent()
+        {
+            // Form properties
+            this.Text = "BÁN VÉ RẠP CHIẾU BÓNG";
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.ClientSize = new Size(820, 580);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+
+            this.AutoScaleMode = AutoScaleMode.None;
+            this.AutoScaleDimensions = new SizeF(96f, 96f);
+            this.Font = new Font("Segoe UI", 10f);
+
+            // Top panel (screen)
+            var pnlScreen = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 72,
+                Padding = new Padding(10),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = SystemColors.ControlLightLight
+            };
+            pnlScreen.Controls.Add(new Label
+            {
+                Dock = DockStyle.Fill,
+                Text = "MÀN ẢNH",
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 18f, FontStyle.Bold),
+                ForeColor = Color.DarkOrange
+            });
+            this.Controls.Add(pnlScreen);
+
+            // Bottom panel with buttons and total
+            var bottom = new TableLayoutPanel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 120,
+                ColumnCount = 3,
+                RowCount = 2,
+                Padding = new Padding(24, 8, 24, 12)
+            };
+            bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+            bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            bottom.RowStyles.Add(new RowStyle(SizeType.Absolute, 44));
+            bottom.RowStyles.Add(new RowStyle(SizeType.Absolute, 56));
+            this.Controls.Add(bottom);
+
+            var lblThanhTien = new Label
+            {
+                Text = "Thành Tiền:",
+                Anchor = AnchorStyles.Left,
+                AutoSize = true
+            };
+            txtThanhTien = new TextBox
+            {
+                ReadOnly = true,
+                Text = "0",
+                TextAlign = HorizontalAlignment.Right,
+                Dock = DockStyle.Fill
+            };
+            bottom.Controls.Add(lblThanhTien, 0, 0);
+            bottom.Controls.Add(txtThanhTien, 1, 0);
+            bottom.SetColumnSpan(txtThanhTien, 2);
+
+            Button MakeCmd(string text)
+            {
+                return new Button
+                {
+                    Text = text,
+                    Dock = DockStyle.Fill,
+                    Margin = new Padding(8, 4, 8, 4)
+                };
+            }
+            var btnChon = MakeCmd("Chọn");
+            var btnHuy = MakeCmd("Hủy bỏ");
+            var btnEnd = MakeCmd("Kết thúc");
+            btnChon.Click += BtnChon_Click;
+            btnHuy.Click += BtnHuy_Click;
+            btnEnd.Click += (s, e) => this.Close();
+
+            bottom.Controls.Add(btnChon, 0, 1);
+            bottom.Controls.Add(btnHuy, 1, 1);
+            bottom.Controls.Add(btnEnd, 2, 1);
+
+            // Center area and seats grid
+            var center = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 3,
+                Margin = new Padding(0),
+                Padding = new Padding(0)
+            };
+            center.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            center.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            center.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            center.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            center.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            center.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            this.Controls.Add(center);
+
+            seatsGrid = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Margin = new Padding(0),
+                Padding = new Padding(0),
+                ColumnCount = 5,
+                RowCount = 3,
+                GrowStyle = TableLayoutPanelGrowStyle.FixedSize
+            };
+            for (int c = 0; c < 5; c++)
+                seatsGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90 + (c == 4 ? 0 : 16)));
+            for (int r = 0; r < 3; r++)
+                seatsGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 70 + (r == 2 ? 0 : 16)));
+
+            center.Controls.Add(seatsGrid, 1, 1);
+        }
+
+        #endregion
+    }
+}
+

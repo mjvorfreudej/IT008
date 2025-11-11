@@ -1,0 +1,9 @@
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\bin\Debug\Bai05.exe.config
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\bin\Debug\Bai05.exe
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\bin\Debug\Bai05.pdb
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\obj\Debug\Bai05.csproj.AssemblyReference.cache
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\obj\Debug\Bai05.Properties.Resources.resources
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\obj\Debug\Bai05.csproj.GenerateResource.cache
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\obj\Debug\Bai05.csproj.CoreCompileInputs.cache
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\obj\Debug\Bai05.exe
+C:\Users\nalrziss\Desktop\bai_hoc\uit\IT008_VisualProgramming\thuc_hanh\BTH3_LamDoanHaQuyen_24521498\Bai05\obj\Debug\Bai05.pdb

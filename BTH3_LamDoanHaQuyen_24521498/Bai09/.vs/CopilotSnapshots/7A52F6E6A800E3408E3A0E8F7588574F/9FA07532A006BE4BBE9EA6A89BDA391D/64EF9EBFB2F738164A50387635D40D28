@@ -1,0 +1,351 @@
+﻿namespace Bai09
+{
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        // UI controls
+        private System.Windows.Forms.GroupBox groupBoxInfo;
+        private System.Windows.Forms.Label labelMSSV;
+        private System.Windows.Forms.TextBox txtMSSV;
+        private System.Windows.Forms.Label labelHoTen;
+        private System.Windows.Forms.TextBox txtHoTen;
+        private System.Windows.Forms.Label labelChuyenNganh;
+        private System.Windows.Forms.ComboBox cmbChuyenNganh;
+        private System.Windows.Forms.Label labelGioiTinh;
+        private System.Windows.Forms.CheckBox chkNam;
+        private System.Windows.Forms.CheckBox chkNu;
+        private System.Windows.Forms.Label labelMonHoc;
+        private System.Windows.Forms.ListBox lbAvailable;
+        private System.Windows.Forms.ListBox lbSelected;
+        private System.Windows.Forms.Button btnAddCourse;
+        private System.Windows.Forms.Button btnRemoveCourse;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.DataGridView dgvStudents;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.groupBoxInfo = new System.Windows.Forms.GroupBox();
+            this.labelMSSV = new System.Windows.Forms.Label();
+            this.txtMSSV = new System.Windows.Forms.TextBox();
+            this.labelHoTen = new System.Windows.Forms.Label();
+            this.txtHoTen = new System.Windows.Forms.TextBox();
+            this.labelChuyenNganh = new System.Windows.Forms.Label();
+            this.cmbChuyenNganh = new System.Windows.Forms.ComboBox();
+            this.labelGioiTinh = new System.Windows.Forms.Label();
+            this.chkNam = new System.Windows.Forms.CheckBox();
+            this.chkNu = new System.Windows.Forms.CheckBox();
+            this.labelMonHoc = new System.Windows.Forms.Label();
+            this.lbAvailable = new System.Windows.Forms.ListBox();
+            this.lbSelected = new System.Windows.Forms.ListBox();
+            this.btnAddCourse = new System.Windows.Forms.Button();
+            this.btnRemoveCourse = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.dgvStudents = new System.Windows.Forms.DataGridView();
+            this.colMSSV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHoTen = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colChuyen = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGioiTinh = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSoMon = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBoxInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStudents)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // groupBoxInfo
+            // 
+            this.groupBoxInfo.Controls.Add(this.labelMSSV);
+            this.groupBoxInfo.Controls.Add(this.txtMSSV);
+            this.groupBoxInfo.Controls.Add(this.labelHoTen);
+            this.groupBoxInfo.Controls.Add(this.txtHoTen);
+            this.groupBoxInfo.Controls.Add(this.labelChuyenNganh);
+            this.groupBoxInfo.Controls.Add(this.cmbChuyenNganh);
+            this.groupBoxInfo.Controls.Add(this.labelGioiTinh);
+            this.groupBoxInfo.Controls.Add(this.chkNam);
+            this.groupBoxInfo.Controls.Add(this.chkNu);
+            this.groupBoxInfo.Controls.Add(this.labelMonHoc);
+            this.groupBoxInfo.Controls.Add(this.lbAvailable);
+            this.groupBoxInfo.Controls.Add(this.lbSelected);
+            this.groupBoxInfo.Controls.Add(this.btnAddCourse);
+            this.groupBoxInfo.Controls.Add(this.btnRemoveCourse);
+            this.groupBoxInfo.Controls.Add(this.btnSave);
+            this.groupBoxInfo.Controls.Add(this.btnDelete);
+            this.groupBoxInfo.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxInfo.Name = "groupBoxInfo";
+            this.groupBoxInfo.Size = new System.Drawing.Size(776, 282);
+            this.groupBoxInfo.TabIndex = 0;
+            this.groupBoxInfo.TabStop = false;
+            this.groupBoxInfo.Text = "Thông Tin Sinh Viên";
+            // 
+            // labelMSSV
+            // 
+            this.labelMSSV.AutoSize = true;
+            this.labelMSSV.Location = new System.Drawing.Point(143, 23);
+            this.labelMSSV.Name = "labelMSSV";
+            this.labelMSSV.Size = new System.Drawing.Size(70, 13);
+            this.labelMSSV.TabIndex = 0;
+            this.labelMSSV.Text = "Mã Sinh Viên";
+            // 
+            // txtMSSV
+            // 
+            this.txtMSSV.Location = new System.Drawing.Point(247, 20);
+            this.txtMSSV.Name = "txtMSSV";
+            this.txtMSSV.Size = new System.Drawing.Size(200, 20);
+            this.txtMSSV.TabIndex = 1;
+            // 
+            // labelHoTen
+            // 
+            this.labelHoTen.AutoSize = true;
+            this.labelHoTen.Location = new System.Drawing.Point(143, 53);
+            this.labelHoTen.Name = "labelHoTen";
+            this.labelHoTen.Size = new System.Drawing.Size(43, 13);
+            this.labelHoTen.TabIndex = 2;
+            this.labelHoTen.Text = "Họ Tên";
+            // 
+            // txtHoTen
+            // 
+            this.txtHoTen.Location = new System.Drawing.Point(247, 50);
+            this.txtHoTen.Name = "txtHoTen";
+            this.txtHoTen.Size = new System.Drawing.Size(420, 20);
+            this.txtHoTen.TabIndex = 3;
+            // 
+            // labelChuyenNganh
+            // 
+            this.labelChuyenNganh.AutoSize = true;
+            this.labelChuyenNganh.Location = new System.Drawing.Point(143, 83);
+            this.labelChuyenNganh.Name = "labelChuyenNganh";
+            this.labelChuyenNganh.Size = new System.Drawing.Size(78, 13);
+            this.labelChuyenNganh.TabIndex = 4;
+            this.labelChuyenNganh.Text = "Chuyên Ngành";
+            // 
+            // cmbChuyenNganh
+            // 
+            this.cmbChuyenNganh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbChuyenNganh.FormattingEnabled = true;
+            this.cmbChuyenNganh.Items.AddRange(new object[] {
+            "Hệ Thống Thông Tin",
+            "Mạng Máy Tính",
+            "Khoa Học Máy Tính"});
+            this.cmbChuyenNganh.Location = new System.Drawing.Point(247, 80);
+            this.cmbChuyenNganh.Name = "cmbChuyenNganh";
+            this.cmbChuyenNganh.Size = new System.Drawing.Size(250, 21);
+            this.cmbChuyenNganh.TabIndex = 5;
+            // 
+            // labelGioiTinh
+            // 
+            this.labelGioiTinh.AutoSize = true;
+            this.labelGioiTinh.Location = new System.Drawing.Point(143, 117);
+            this.labelGioiTinh.Name = "labelGioiTinh";
+            this.labelGioiTinh.Size = new System.Drawing.Size(51, 13);
+            this.labelGioiTinh.TabIndex = 6;
+            this.labelGioiTinh.Text = "Giới Tính";
+            // 
+            // chkNam
+            // 
+            this.chkNam.AutoSize = true;
+            this.chkNam.Location = new System.Drawing.Point(247, 115);
+            this.chkNam.Name = "chkNam";
+            this.chkNam.Size = new System.Drawing.Size(50, 17);
+            this.chkNam.TabIndex = 7;
+            this.chkNam.Text = "Nam";
+            this.chkNam.UseVisualStyleBackColor = true;
+            this.chkNam.CheckedChanged += new System.EventHandler(this.chkNam_CheckedChanged);
+            // 
+            // chkNu
+            // 
+            this.chkNu.AutoSize = true;
+            this.chkNu.Location = new System.Drawing.Point(317, 115);
+            this.chkNu.Name = "chkNu";
+            this.chkNu.Size = new System.Drawing.Size(41, 17);
+            this.chkNu.TabIndex = 8;
+            this.chkNu.Text = "Nữ";
+            this.chkNu.UseVisualStyleBackColor = true;
+            this.chkNu.CheckedChanged += new System.EventHandler(this.chkNu_CheckedChanged);
+            // 
+            // labelMonHoc
+            // 
+            this.labelMonHoc.AutoSize = true;
+            this.labelMonHoc.Location = new System.Drawing.Point(143, 146);
+            this.labelMonHoc.Name = "labelMonHoc";
+            this.labelMonHoc.Size = new System.Drawing.Size(150, 13);
+            this.labelMonHoc.TabIndex = 9;
+            this.labelMonHoc.Text = "Chọn Các Môn Học Tham Gia";
+            // 
+            // lbAvailable
+            // 
+            this.lbAvailable.FormattingEnabled = true;
+            this.lbAvailable.Items.AddRange(new object[] {
+            "Cơ Sở Dữ Liệu",
+            "Cơ Sở DL NC",
+            "PTTK Hệ Thống thông tin"});
+            this.lbAvailable.Location = new System.Drawing.Point(106, 175);
+            this.lbAvailable.Name = "lbAvailable";
+            this.lbAvailable.Size = new System.Drawing.Size(250, 69);
+            this.lbAvailable.TabIndex = 10;
+            // 
+            // lbSelected
+            // 
+            this.lbSelected.FormattingEnabled = true;
+            this.lbSelected.Location = new System.Drawing.Point(497, 175);
+            this.lbSelected.Name = "lbSelected";
+            this.lbSelected.Size = new System.Drawing.Size(250, 69);
+            this.lbSelected.TabIndex = 11;
+            // 
+            // btnAddCourse
+            // 
+            this.btnAddCourse.Location = new System.Drawing.Point(386, 187);
+            this.btnAddCourse.Name = "btnAddCourse";
+            this.btnAddCourse.Size = new System.Drawing.Size(75, 23);
+            this.btnAddCourse.TabIndex = 12;
+            this.btnAddCourse.Text = ">";
+            this.btnAddCourse.UseVisualStyleBackColor = true;
+            this.btnAddCourse.Click += new System.EventHandler(this.btnAddCourse_Click);
+            // 
+            // btnRemoveCourse
+            // 
+            this.btnRemoveCourse.Location = new System.Drawing.Point(386, 216);
+            this.btnRemoveCourse.Name = "btnRemoveCourse";
+            this.btnRemoveCourse.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveCourse.TabIndex = 13;
+            this.btnRemoveCourse.Text = "<";
+            this.btnRemoveCourse.UseVisualStyleBackColor = true;
+            this.btnRemoveCourse.Click += new System.EventHandler(this.btnRemoveCourse_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(317, 250);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(100, 23);
+            this.btnSave.TabIndex = 14;
+            this.btnSave.Text = "Lưu Thông Tin";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(432, 250);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(100, 23);
+            this.btnDelete.TabIndex = 15;
+            this.btnDelete.Text = "Xóa Chọn";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // dgvStudents
+            // 
+            this.dgvStudents.AllowUserToAddRows = false;
+            this.dgvStudents.AllowUserToDeleteRows = false;
+            this.dgvStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvStudents.BackgroundColor = System.Drawing.SystemColors.Window; // header background
+            this.dgvStudents.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dgvStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvStudents.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colMSSV,
+            this.colHoTen,
+            this.colChuyen,
+            this.colGioiTinh,
+            this.colSoMon});
+            this.dgvStudents.Location = new System.Drawing.Point(12, 300);
+            this.dgvStudents.Name = "dgvStudents";
+            this.dgvStudents.ReadOnly = true;
+            this.dgvStudents.RowHeadersVisible = true; // show row header (star)
+            this.dgvStudents.RowHeadersWidth = 24;
+            this.dgvStudents.Size = new System.Drawing.Size(776, 138);
+            this.dgvStudents.TabIndex = 1;
+            this.dgvStudents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+             | System.Windows.Forms.AnchorStyles.Left)
+             | System.Windows.Forms.AnchorStyles.Right)));
+             // set header background white and rows background gray like screenshot
+             var headerStyle = new System.Windows.Forms.DataGridViewCellStyle();
+             headerStyle.BackColor = System.Drawing.SystemColors.Window;
+             headerStyle.ForeColor = System.Drawing.SystemColors.ControlText;
+             this.dgvStudents.ColumnHeadersDefaultCellStyle = headerStyle;
+             this.dgvStudents.EnableHeadersVisualStyles = false;
+             this.dgvStudents.RowsDefaultCellStyle.BackColor = System.Drawing.SystemColors.Control; // gray area for rows
+             this.dgvStudents.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.SystemColors.Control;
+             this.dgvStudents.GridColor = System.Drawing.SystemColors.ControlDark;
+                        // 
+            // colMSSV
+            // 
+            this.colMSSV.HeaderText = "MSSV";
+            this.colMSSV.Name = "colMSSV";
+            this.colMSSV.ReadOnly = true;
+            this.colMSSV.FillWeight = 20F;
+            // 
+            // colHoTen
+            // 
+            this.colHoTen.HeaderText = "Họ Tên";
+            this.colHoTen.Name = "colHoTen";
+            this.colHoTen.ReadOnly = true;
+            this.colHoTen.FillWeight = 35F;
+            // 
+            // colChuyen
+            // 
+            this.colChuyen.HeaderText = "Chuyên Ngành";
+            this.colChuyen.Name = "colChuyen";
+            this.colChuyen.ReadOnly = true;
+            this.colChuyen.FillWeight = 30F;
+            // 
+            // colGioiTinh
+            // 
+            this.colGioiTinh.HeaderText = "Giới Tính";
+            this.colGioiTinh.Name = "colGioiTinh";
+            this.colGioiTinh.ReadOnly = true;
+            this.colGioiTinh.FillWeight = 7F;
+            // 
+            // colSoMon
+            // 
+            this.colSoMon.HeaderText = "Số Môn";
+            this.colSoMon.Name = "colSoMon";
+            this.colSoMon.ReadOnly = true;
+            this.colSoMon.FillWeight = 8F;
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.dgvStudents);
+            this.Controls.Add(this.groupBoxInfo);
+            this.Name = "MainForm";
+            this.Text = "Nhập Liệu Sinh Viên";
+            this.groupBoxInfo.ResumeLayout(false);
+            this.groupBoxInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStudents)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.DataGridViewTextBoxColumn colMSSV;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHoTen;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colChuyen;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGioiTinh;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSoMon;
+    }
+}
+

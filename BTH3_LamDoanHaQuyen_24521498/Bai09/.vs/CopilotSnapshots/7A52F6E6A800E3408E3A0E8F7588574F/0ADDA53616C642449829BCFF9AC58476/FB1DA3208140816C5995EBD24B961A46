@@ -1,0 +1,98 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace Bai09
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        private void btnAddCourse_Click(object sender, EventArgs e)
+        {
+            if (lbAvailable.SelectedItem != null)
+            {
+                var item = lbAvailable.SelectedItem.ToString();
+                if (!lbSelected.Items.Contains(item))
+                {
+                    lbSelected.Items.Add(item);
+                }
+            }
+        }
+
+        private void btnRemoveCourse_Click(object sender, EventArgs e)
+        {
+            if (lbSelected.SelectedItem != null)
+            {
+                lbSelected.Items.Remove(lbSelected.SelectedItem);
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            // validate
+            if (string.IsNullOrWhiteSpace(txtMSSV.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Mã Sinh Viên.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtMSSV.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(txtHoTen.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Họ Tên.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtHoTen.Focus();
+                return;
+            }
+            var gender = chkNam.Checked ? "Nam" : (chkNu.Checked ? "Nữ" : "");
+            var chuyen = cmbChuyenNganh.SelectedItem != null ? cmbChuyenNganh.SelectedItem.ToString() : string.Empty;
+            int soMon = lbSelected.Items.Count;
+
+            // add to grid
+            dgvStudents.Rows.Add(txtMSSV.Text.Trim(), txtHoTen.Text.Trim(), chuyen, gender, soMon.ToString());
+
+            ClearInputs();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (dgvStudents.SelectedRows.Count ==0)
+            {
+                MessageBox.Show("Vui lòng chọn hàng cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            foreach (DataGridViewRow row in dgvStudents.SelectedRows)
+            {
+                if (!row.IsNewRow)
+                    dgvStudents.Rows.Remove(row);
+            }
+        }
+
+        private void ClearInputs()
+        {
+            txtMSSV.Text = string.Empty;
+            txtHoTen.Text = string.Empty;
+            cmbChuyenNganh.SelectedIndex = -1;
+            chkNam.Checked = false;
+            chkNu.Checked = false;
+            lbSelected.Items.Clear();
+        }
+
+        private void chkNam_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkNam.Checked)
+            {
+                chkNu.Checked = false;
+            }
+        }
+
+        private void chkNu_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkNu.Checked)
+            {
+                chkNam.Checked = false;
+            }
+        }
+    }
+}

@@ -1,0 +1,115 @@
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace Bai06
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+
+            Text = "Calculator";
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            ClientSize = new Size(260, 258);
+
+            // 🔹 Fix lỗi DPI + Font classic
+            AutoScaleMode = AutoScaleMode.None;
+            AutoScaleDimensions = new SizeF(96f, 96f);
+            Font = new Font("Microsoft Sans Serif", 8.25f);
+
+            // ===== Menu =====
+            var menu = new MenuStrip();
+            menu.Items.Add(new ToolStripMenuItem("Edit"));
+            menu.Items.Add(new ToolStripMenuItem("View"));
+            menu.Items.Add(new ToolStripMenuItem("Help"));
+            MainMenuStrip = menu;
+            Controls.Add(menu);
+
+            // ===== Display (ô hiển thị) =====
+            var txtDisplay = new TextBox
+            {
+                ReadOnly = true,
+                TabStop = false,
+                Text = "0.",
+                TextAlign = HorizontalAlignment.Right,
+                Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular),
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(10, 30),
+                Size = new Size(238, 26)
+            };
+            Controls.Add(txtDisplay);
+
+            // Ô nhỏ xám bên trái (ô M)
+            var memIndicator = new TextBox
+            {
+                Enabled = false,
+                BackColor = SystemColors.Control,
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(10, 60),
+                Size = new Size(36, 20)
+            };
+            Controls.Add(memIndicator);
+
+            // ===== Nút =====
+            Button MakeBtn(string text, int x, int y, int w = 45, int h = 28)
+            {
+                var b = new Button
+                {
+                    Text = text,
+                    ForeColor = Color.Red,
+                    Location = new Point(x, y),
+                    Size = new Size(w, h),
+                    TabStop = false,
+                    UseVisualStyleBackColor = true
+                };
+                Controls.Add(b);
+                return b;
+            }
+
+            // Gốc và khoảng cách
+            int left = 10, top = 90, gap = 5, W = 45, H = 28;
+
+            // ===== Hàng 1: Backspace CE C =====
+            MakeBtn("Backspace", left + (W + gap), top, 78, H);
+            MakeBtn("CE", left + 2 * (W + gap) + 78, top, W, H);
+            MakeBtn("C", left + 3 * (W + gap) + 78, top, W, H);
+
+            // ===== Cột Memory: MC MR MS M+ =====
+            MakeBtn("MC", left, top + (H + gap) * 1, W, H);
+            MakeBtn("MR", left, top + (H + gap) * 2, W, H);
+            MakeBtn("MS", left, top + (H + gap) * 3, W, H);
+            MakeBtn("M+", left, top + (H + gap) * 4, W, H);
+
+            // ===== Hàng 2: 7 8 9 / sqrt =====
+            MakeBtn("7", left + (W + gap), top + (H + gap) * 1, W, H);
+            MakeBtn("8", left + 2 * (W + gap), top + (H + gap) * 1, W, H);
+            MakeBtn("9", left + 3 * (W + gap), top + (H + gap) * 1, W, H);
+            MakeBtn("/", left + 4 * (W + gap), top + (H + gap) * 1, W, H);
+            MakeBtn("sqrt", left + 5 * (W + gap) - 10, top + (H + gap) * 1, W, H);
+
+            // ===== Hàng 3: 4 5 6 * % =====
+            MakeBtn("4", left + (W + gap), top + (H + gap) * 2, W, H);
+            MakeBtn("5", left + 2 * (W + gap), top + (H + gap) * 2, W, H);
+            MakeBtn("6", left + 3 * (W + gap), top + (H + gap) * 2, W, H);
+            MakeBtn("*", left + 4 * (W + gap), top + (H + gap) * 2, W, H);
+            MakeBtn("%", left + 5 * (W + gap) - 10, top + (H + gap) * 2, W, H);
+
+            // ===== Hàng 4: 1 2 3 - 1/x =====
+            MakeBtn("1", left + (W + gap), top + (H + gap) * 3, W, H);
+            MakeBtn("2", left + 2 * (W + gap), top + (H + gap) * 3, W, H);
+            MakeBtn("3", left + 3 * (W + gap), top + (H + gap) * 3, W, H);
+            MakeBtn("-", left + 4 * (W + gap), top + (H + gap) * 3, W, H);
+            MakeBtn("1/x", left + 5 * (W + gap) - 10, top + (H + gap) * 3, W, H);
+
+            // ===== Hàng 5: 0 +/- . = =====
+            MakeBtn("0", left + (W + gap), top + (H + gap) * 4, W, H);
+            MakeBtn("+/-", left + 2 * (W + gap), top + (H + gap) * 4, W, H);
+            MakeBtn(".", left + 3 * (W + gap), top + (H + gap) * 4, W, H);
+            MakeBtn("+", left + 4 * (W + gap), top + (H + gap) * 4, W, H);
+            MakeBtn("=", left + 5 * (W + gap) - 10, top + (H + gap) * 4, W, H);
+        }
+    }
+}
