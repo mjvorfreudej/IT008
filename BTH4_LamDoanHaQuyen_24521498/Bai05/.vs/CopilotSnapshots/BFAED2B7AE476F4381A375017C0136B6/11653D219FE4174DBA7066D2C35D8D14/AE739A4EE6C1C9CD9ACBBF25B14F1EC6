@@ -1,0 +1,100 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace QLSinhVienDemo
+{
+    public partial class MainForm : Form
+    {
+        private readonly string _connectionString =
+            @"Data Source=DESKTOP-VC04V7V;Initial Catalog=QLSinhVien;User ID=sa;Password=290391";
+
+
+        private DataTable _dtSinhVien;
+
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        // ------ Load dữ liệu (có / không có từ khóa tìm kiếm) ------
+        private void LoadData(string keyword = "")
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    cmd.CommandText = "SELECT MaSV, TenSV, Khoa, DiemTB FROM SinhVien";
+                }
+                else
+                {
+                    cmd.CommandText =
+                        @"SELECT MaSV, TenSV, Khoa, DiemTB
+                          FROM SinhVien
+                          WHERE UPPER(TenSV) LIKE @kw";    // không phân biệt hoa/thường
+                    cmd.Parameters.AddWithValue("@kw", "%" + keyword.ToUpper() + "%");
+                }
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                _dtSinhVien = new DataTable();
+                da.Fill(_dtSinhVien);
+            }
+
+            // đổ vào DataGridView
+            dgvSinhVien.Rows.Clear();
+            int stt = 1;
+            foreach (DataRow row in _dtSinhVien.Rows)
+            {
+                dgvSinhVien.Rows.Add(
+                    stt++,
+                    row["MaSV"],
+                    row["TenSV"],
+                    row["Khoa"],
+                    row["DiemTB"]
+                );
+            }
+        }
+
+        // ---------------- Menu / ToolStrip: Thêm mới ----------------
+        private void mnuThemMoi_Click(object sender, EventArgs e)
+        {
+            ShowAddStudentForm();
+        }
+
+        private void btnThemMoi_Click(object sender, EventArgs e)
+        {
+            ShowAddStudentForm();
+        }
+
+        private void ShowAddStudentForm()
+        {
+            using (AddStudentForm f = new AddStudentForm(_connectionString))
+            {
+                if (f.ShowDialog(this) == DialogResult.OK)
+                {
+                    // thêm xong thì load lại, giữ nguyên keyword đang tìm
+                    LoadData(txtTimKiem.Text.Trim());
+                }
+            }
+        }
+
+        // ---------------------- Menu: Thoát -------------------------
+        private void mnuThoat_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        // ------------- Tìm kiếm theo tên (realtime) -----------------
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
+        {
+            LoadData(txtTimKiem.Text.Trim());
+        }
+    }
+}

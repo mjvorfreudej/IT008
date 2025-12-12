@@ -1,0 +1,178 @@
+﻿namespace QLSinhVienDemo
+{
+    partial class AddStudentForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up resources.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+                components.Dispose();
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private void InitializeComponent()
+        {
+            this.lblMaSV = new System.Windows.Forms.Label();
+            this.lblTenSV = new System.Windows.Forms.Label();
+            this.lblKhoa = new System.Windows.Forms.Label();
+            this.lblDiemTB = new System.Windows.Forms.Label();
+
+            this.txtMaSV = new System.Windows.Forms.TextBox();
+            this.txtTenSV = new System.Windows.Forms.TextBox();
+            this.txtDiemTB = new System.Windows.Forms.TextBox();
+            this.cboKhoa = new System.Windows.Forms.ComboBox();
+
+            this.btnThemMoi = new System.Windows.Forms.Button();
+            this.btnThoat = new System.Windows.Forms.Button();
+
+            this.SuspendLayout();
+
+            // 
+            // lblMaSV
+            // 
+            this.lblMaSV.AutoSize = true;
+            this.lblMaSV.Location = new System.Drawing.Point(35, 30);
+            this.lblMaSV.Name = "lblMaSV";
+            this.lblMaSV.Size = new System.Drawing.Size(95, 13);
+            this.lblMaSV.TabIndex = 0;
+            this.lblMaSV.Text = "Mã Số Sinh Viên:";
+
+            // 
+            // txtMaSV
+            // 
+            this.txtMaSV.Location = new System.Drawing.Point(150, 27);
+            this.txtMaSV.Name = "txtMaSV";
+            this.txtMaSV.Size = new System.Drawing.Size(250, 20);
+            this.txtMaSV.TabIndex = 1;
+
+            // 
+            // lblTenSV
+            // 
+            this.lblTenSV.AutoSize = true;
+            this.lblTenSV.Location = new System.Drawing.Point(35, 70);
+            this.lblTenSV.Name = "lblTenSV";
+            this.lblTenSV.Size = new System.Drawing.Size(84, 13);
+            this.lblTenSV.TabIndex = 2;
+            this.lblTenSV.Text = "Tên Sinh Viên:";
+
+            // 
+            // txtTenSV
+            // 
+            this.txtTenSV.Location = new System.Drawing.Point(150, 67);
+            this.txtTenSV.Name = "txtTenSV";
+            this.txtTenSV.Size = new System.Drawing.Size(250, 20);
+            this.txtTenSV.TabIndex = 3;
+
+            // 
+            // lblKhoa
+            // 
+            this.lblKhoa.AutoSize = true;
+            this.lblKhoa.Location = new System.Drawing.Point(35, 110);
+            this.lblKhoa.Name = "lblKhoa";
+            this.lblKhoa.Size = new System.Drawing.Size(36, 13);
+            this.lblKhoa.TabIndex = 4;
+            this.lblKhoa.Text = "Khoa:";
+
+            // 
+            // cboKhoa
+            // 
+            this.cboKhoa.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboKhoa.FormattingEnabled = true;
+            this.cboKhoa.Location = new System.Drawing.Point(150, 107);
+            this.cboKhoa.Name = "cboKhoa";
+            this.cboKhoa.Size = new System.Drawing.Size(250, 21);
+            this.cboKhoa.TabIndex = 5;
+
+            // 
+            // lblDiemTB
+            // 
+            this.lblDiemTB.AutoSize = true;
+            this.lblDiemTB.Location = new System.Drawing.Point(35, 150);
+            this.lblDiemTB.Name = "lblDiemTB";
+            this.lblDiemTB.Size = new System.Drawing.Size(55, 13);
+            this.lblDiemTB.TabIndex = 6;
+            this.lblDiemTB.Text = "Điểm TB:";
+
+            // 
+            // txtDiemTB
+            // 
+            this.txtDiemTB.Location = new System.Drawing.Point(150, 147);
+            this.txtDiemTB.Name = "txtDiemTB";
+            this.txtDiemTB.Size = new System.Drawing.Size(250, 20);
+            this.txtDiemTB.TabIndex = 7;
+
+            // 
+            // btnThemMoi
+            // 
+            this.btnThemMoi.BackColor = System.Drawing.Color.LightGreen;
+            this.btnThemMoi.Location = new System.Drawing.Point(150, 190);
+            this.btnThemMoi.Name = "btnThemMoi";
+            this.btnThemMoi.Size = new System.Drawing.Size(100, 35);
+            this.btnThemMoi.TabIndex = 8;
+            this.btnThemMoi.Text = "Thêm Mới";
+            this.btnThemMoi.UseVisualStyleBackColor = false;
+            this.btnThemMoi.Click += new System.EventHandler(this.btnThemMoi_Click);
+
+            // 
+            // btnThoat
+            // 
+            this.btnThoat.BackColor = System.Drawing.Color.Salmon;
+            this.btnThoat.Location = new System.Drawing.Point(300, 190);
+            this.btnThoat.Name = "btnThoat";
+            this.btnThoat.Size = new System.Drawing.Size(100, 35);
+            this.btnThoat.TabIndex = 9;
+            this.btnThoat.Text = "Thoát";
+            this.btnThoat.UseVisualStyleBackColor = false;
+            this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
+
+            // 
+            // AddStudentForm
+            // 
+            this.AcceptButton = this.btnThemMoi;
+            this.CancelButton = this.btnThoat;
+            this.ClientSize = new System.Drawing.Size(450, 250);
+            this.Controls.Add(this.btnThoat);
+            this.Controls.Add(this.btnThemMoi);
+            this.Controls.Add(this.txtDiemTB);
+            this.Controls.Add(this.lblDiemTB);
+            this.Controls.Add(this.cboKhoa);
+            this.Controls.Add(this.lblKhoa);
+            this.Controls.Add(this.txtTenSV);
+            this.Controls.Add(this.lblTenSV);
+            this.Controls.Add(this.txtMaSV);
+            this.Controls.Add(this.lblMaSV);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Name = "AddStudentForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Thêm Sinh Viên";
+            this.Load += new System.EventHandler(this.AddStudentForm_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Label lblMaSV;
+        private System.Windows.Forms.Label lblTenSV;
+        private System.Windows.Forms.Label lblKhoa;
+        private System.Windows.Forms.Label lblDiemTB;
+
+        private System.Windows.Forms.TextBox txtMaSV;
+        private System.Windows.Forms.TextBox txtTenSV;
+        private System.Windows.Forms.TextBox txtDiemTB;
+
+        private System.Windows.Forms.ComboBox cboKhoa;
+
+        private System.Windows.Forms.Button btnThemMoi;
+        private System.Windows.Forms.Button btnThoat;
+    }
+}

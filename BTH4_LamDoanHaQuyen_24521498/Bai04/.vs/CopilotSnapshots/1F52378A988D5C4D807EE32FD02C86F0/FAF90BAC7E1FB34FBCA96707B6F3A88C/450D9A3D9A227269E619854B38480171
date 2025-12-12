@@ -1,0 +1,313 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace Bai04
+{
+    public partial class MainForm : Form
+    {
+        private string currentFilePath = null;
+
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadFonts();
+            LoadSizes();
+            SetDefaultFormat();
+            CreateToolbarIcons();
+        }
+
+        private void CreateToolbarIcons()
+        {
+            btnNew.Image = CreateNewIcon();
+            btnOpen.Image = CreateOpenIcon();
+            btnSave.Image = CreateSaveIcon();
+        }
+
+        private Bitmap CreateNewIcon()
+        {
+            Bitmap bmp = new Bitmap(16, 16);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.Transparent);
+                g.FillRectangle(Brushes.White, 2, 1, 12, 14);
+                g.DrawRectangle(Pens.Black, 2, 1, 12, 14);
+                g.DrawLine(Pens.Black, 11, 1, 14, 1);
+                g.DrawLine(Pens.Black, 14, 1, 14, 4);
+                g.DrawLine(Pens.Black, 14, 4, 11, 4);
+                g.FillPolygon(Brushes.LightGray, new Point[] { new Point(11, 1), new Point(14, 4), new Point(11, 4) });
+            }
+            return bmp;
+        }
+
+        private Bitmap CreateOpenIcon()
+        {
+            Bitmap bmp = new Bitmap(16, 16);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.Transparent);
+                g.FillRectangle(Brushes.Yellow, 2, 5, 12, 9);
+                g.DrawRectangle(Pens.Black, 2, 5, 12, 9);
+                Point[] tabPoints = { new Point(2, 5), new Point(4, 3), new Point(8, 3), new Point(10, 5) };
+                g.FillPolygon(Brushes.Yellow, tabPoints);
+                g.DrawLines(Pens.Black, tabPoints);
+            }
+            return bmp;
+        }
+
+        private Bitmap CreateSaveIcon()
+        {
+            Bitmap bmp = new Bitmap(16, 16);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.Transparent);
+                g.FillRectangle(Brushes.LightGray, 2, 2, 12, 12);
+                g.DrawRectangle(Pens.Black, 2, 2, 12, 12);
+                g.FillRectangle(Brushes.DarkGray, 3, 2, 10, 4);
+                g.FillRectangle(Brushes.White, 5, 8, 6, 6);
+                g.DrawRectangle(Pens.Black, 5, 8, 6, 6);
+                g.FillRectangle(Brushes.DarkBlue, 11, 3, 2, 2);
+            }
+            return bmp;
+        }
+
+        private void LoadFonts()
+        {
+            foreach (FontFamily font in FontFamily.Families)
+            {
+                cboFont.Items.Add(font.Name);
+            }
+        }
+
+        private void LoadSizes()
+        {
+            int[] sizes = { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 };
+            foreach (int size in sizes)
+            {
+                cboSize.Items.Add(size.ToString());
+            }
+        }
+
+        private void SetDefaultFormat()
+        {
+            cboFont.Text = "Tahoma";
+            cboSize.Text = "14";
+            richTextBox1.Font = new Font("Tahoma", 14);
+        }
+
+        private void taoVanBanMoiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateNewDocument();
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            CreateNewDocument();
+        }
+
+        private void CreateNewDocument()
+        {
+            richTextBox1.Clear();
+            currentFilePath = null;
+            SetDefaultFormat();
+        }
+
+        private void moTapTinToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFile();
+        }
+
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            OpenFile();
+        }
+
+        private void OpenFile()
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    currentFilePath = openFileDialog1.FileName;
+                    string extension = Path.GetExtension(currentFilePath).ToLower();
+
+                    if (extension == ".rtf")
+                    {
+                        richTextBox1.LoadFile(currentFilePath, RichTextBoxStreamType.RichText);
+                    }
+                    else
+                    {
+                        richTextBox1.LoadFile(currentFilePath, RichTextBoxStreamType.PlainText);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi mở tập tin: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void luuNoiDungVanBanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void SaveFile()
+        {
+            if (currentFilePath == null)
+            {
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    currentFilePath = saveFileDialog1.FileName;
+                    try
+                    {
+                        richTextBox1.SaveFile(currentFilePath, RichTextBoxStreamType.RichText);
+                        MessageBox.Show("Lưu văn bản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi lưu tập tin: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    richTextBox1.SaveFile(currentFilePath, RichTextBoxStreamType.RichText);
+                    MessageBox.Show("Lưu văn bản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi lưu tập tin: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void thoatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void dinhDangToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fontDialog1.Font = richTextBox1.SelectionFont;
+            fontDialog1.Color = richTextBox1.SelectionColor;
+            fontDialog1.ShowColor = true;
+            fontDialog1.ShowEffects = true;
+            
+            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            {
+                richTextBox1.SelectionFont = fontDialog1.Font;
+                richTextBox1.SelectionColor = fontDialog1.Color;
+            }
+        }
+
+        private void cboFont_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null)
+            {
+                Font currentFont = richTextBox1.SelectionFont;
+                richTextBox1.SelectionFont = new Font(cboFont.Text, currentFont.Size, currentFont.Style);
+            }
+        }
+
+        private void cboSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null && !string.IsNullOrEmpty(cboSize.Text))
+            {
+                Font currentFont = richTextBox1.SelectionFont;
+                float size;
+                if (float.TryParse(cboSize.Text, out size))
+                {
+                    richTextBox1.SelectionFont = new Font(currentFont.FontFamily, size, currentFont.Style);
+                }
+            }
+        }
+
+        private void btnBold_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null)
+            {
+                Font currentFont = richTextBox1.SelectionFont;
+                FontStyle newStyle;
+
+                if (currentFont.Bold)
+                {
+                    newStyle = currentFont.Style & ~FontStyle.Bold;
+                }
+                else
+                {
+                    newStyle = currentFont.Style | FontStyle.Bold;
+                }
+
+                richTextBox1.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newStyle);
+            }
+        }
+
+        private void btnItalic_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null)
+            {
+                Font currentFont = richTextBox1.SelectionFont;
+                FontStyle newStyle;
+
+                if (currentFont.Italic)
+                {
+                    newStyle = currentFont.Style & ~FontStyle.Italic;
+                }
+                else
+                {
+                    newStyle = currentFont.Style | FontStyle.Italic;
+                }
+
+                richTextBox1.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newStyle);
+            }
+        }
+
+        private void btnUnderline_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null)
+            {
+                Font currentFont = richTextBox1.SelectionFont;
+                FontStyle newStyle;
+
+                if (currentFont.Underline)
+                {
+                    newStyle = currentFont.Style & ~FontStyle.Underline;
+                }
+                else
+                {
+                    newStyle = currentFont.Style | FontStyle.Underline;
+                }
+
+                richTextBox1.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newStyle);
+            }
+        }
+
+        private void richTextBox1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null)
+            {
+                cboFont.Text = richTextBox1.SelectionFont.FontFamily.Name;
+                cboSize.Text = richTextBox1.SelectionFont.Size.ToString();
+            }
+        }
+    }
+}

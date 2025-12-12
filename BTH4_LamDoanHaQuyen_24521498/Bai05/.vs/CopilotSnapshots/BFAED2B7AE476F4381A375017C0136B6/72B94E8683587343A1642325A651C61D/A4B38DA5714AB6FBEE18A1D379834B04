@@ -1,0 +1,140 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+
+namespace Bai05
+{
+    public partial class MainForm : Form
+    {
+        private readonly string _connectionString =
+            @"Data Source=DESKTOP-VC04V7V;Initial Catalog=QLSinhVien;User ID=sa;Password=290391";
+
+
+        private DataTable _dtSinhVien;
+
+        public MainForm()
+        {
+            InitializeComponent();
+            LoadButtonIcon();
+        }
+
+        private void LoadButtonIcon()
+        {
+            // Icon "add user" được embed dưới dạng Base64
+            string base64Icon = @"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA
+                                  sQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANzSURBVFiF
+                                  7ZdNaBNBGIbfmd1NN5vENEmTNk1T09YfxFKt1p+KilJBwYMgCF70IPTiwYsH8eLRgwfBgwcvHgQP
+                                  evAgCB48eFBBRKpVa6u1trZp0zRpkt1sNrsz42GTNGlSq1bwwwdh2Z35vnd2dr6ZBf7jXwc5X8Gy
+                                  LBiG8VfqKIoi/FEA0zRhGAYkSfqj9RiG8WcAZFnGysqKz+l0wul0/nYQj8cD0zRhWRYcDgdCoRAE
+                                  QfitIIIgQJZlWJYFxhgsy4IkSbAsC4ZhwOFw/BYQURRBKQWlFJqmQdd1EEJgWRY0TYOmaRAEAbIs
+                                  gxACQRB+GYjD4QAhBJqmQdM0aJoGXdchiiIIIZBlGYQQ6LoOXddhWRYEQYDD4dgWiCRJoJRCVVWo
+                                  qgpVVaFpGkRRBGMMkiRBkiToug5N06BpGiilkCQJoihCFMVNQWRZBqUUiqJAURQoigJVVSGKIjjn
+                                  kGUZsiyDEAJVVaGqKlRVBaUUsizbIJs5giCIYIxBURTMz89jdnYWc3NzUBQFnHMIggBJkiBJEjjn
+                                  UBQFiqKAMQZBEOxcshGIKIqglGJ5eRmJRALxeByJRAKKooAxBkEQbAjOORRFgaIo4JxDFEUIgnBh
+                                  kHWzwBiDqqpIJpNIJpNIpVJQVRWcc9shxpgNQSmFqqq2a6y7yJqLAOuBGWNQVRXpdBqpVArpdBqq
+                                  qtrzwhizHWKMQVVV2zXWtGadtV2fMA7OOTRNQyaTQTqdRiaTgaZp9hwwxmyH1tyjlNrnazqh0wnH
+                                  xsawZ88exGIx3LhxA8lkEoyx/91hmqZhfHwce/fuRTQaxfXr15FKpcA5/1EHDMPAhQsXsGPHDkQi
+                                  EVy9ehXJZBKc8x93QFVV3Lp1Czt37kQ4HMaVK1eQSqV+PAjnHKqq4vbt29i1axdCoRAuX76MdDoN
+                                  zvkPB1ndIX379g27d+9GMBjExYsXkclk7Lr/KICu67h37x727duHQCCAc+fOIZvNgnP+UwC6ruPB
+                                  gwfYv38//H4/zpw5g1wuB875T1vAuq5jYmICBw8ehM/nw+nTp5HP58E5/6kuoBsGJicnERME4RuR
+                                  kM/T09OI6Tru+Xw+nDp1CoVCAZzzn+6CpmliampqMBAIfN6/b9/YzZs3USqVwDn/JSHQQAipcDgc
+                                  b1++fLmlXC7/MoB/EcB/fFe8B8Lhpn+69GocAAAAAElFTkSuQmCC";
+            
+            try
+            {
+                byte[] imageBytes = Convert.FromBase64String(base64Icon.Replace("\r", "").Replace("\n", "").Replace(" ", ""));
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                {
+                    Image img = Image.FromStream(ms);
+                    btnThemMoi.Image = new Bitmap(img, new Size(20, 20));
+                }
+            }
+            catch
+            {
+                // Nếu không load được icon, bỏ qua
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        // ------ Load dữ liệu (có / không có từ khóa tìm kiếm) ------
+        private void LoadData(string keyword = "")
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    cmd.CommandText = "SELECT MaSV, TenSV, Khoa, DiemTB FROM SinhVien";
+                }
+                else
+                {
+                    cmd.CommandText =
+                        @"SELECT MaSV, TenSV, Khoa, DiemTB
+                          FROM SinhVien
+                          WHERE UPPER(TenSV) LIKE @kw";    // không phân biệt hoa/thường
+                    cmd.Parameters.AddWithValue("@kw", "%" + keyword.ToUpper() + "%");
+                }
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                _dtSinhVien = new DataTable();
+                da.Fill(_dtSinhVien);
+            }
+
+            // đổ vào DataGridView
+            dgvSinhVien.Rows.Clear();
+            int stt = 1;
+            foreach (DataRow row in _dtSinhVien.Rows)
+            {
+                dgvSinhVien.Rows.Add(
+                    stt++,
+                    row["MaSV"],
+                    row["TenSV"],
+                    row["Khoa"],
+                    row["DiemTB"]
+                );
+            }
+        }
+
+        // ---------------- Menu / ToolStrip: Thêm mới ----------------
+        private void mnuThemMoi_Click(object sender, EventArgs e)
+        {
+            ShowAddStudentForm();
+        }
+
+        private void btnThemMoi_Click(object sender, EventArgs e)
+        {
+            ShowAddStudentForm();
+        }
+
+        private void ShowAddStudentForm()
+        {
+            using (AddStudentForm f = new AddStudentForm(_connectionString))
+            {
+                if (f.ShowDialog(this) == DialogResult.OK)
+                {
+                    // thêm xong thì load lại, giữ nguyên keyword đang tìm
+                    LoadData(txtTimKiem.Text.Trim());
+                }
+            }
+        }
+
+        // ---------------------- Menu: Thoát -------------------------
+        private void mnuThoat_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        // ------------- Tìm kiếm theo tên (realtime) -----------------
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
+        {
+            LoadData(txtTimKiem.Text.Trim());
+        }
+    }
+}
