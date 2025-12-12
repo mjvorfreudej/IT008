@@ -1,0 +1,319 @@
+﻿using System;
+using System.Drawing;
+using System.Globalization;
+using System.Windows.Forms;
+
+namespace Bai06
+{
+    public partial class MainForm : Form
+    {
+        // Controls must be fields so event handlers can access them            
+        private TextBox txtDisplay;
+        private TextBox memIndicator;
+
+        // Calculator state
+        private double? operand = null;
+        private string pendingOp = null;
+        private bool isNewEntry = true;
+        private double memory =0.0;
+
+        public MainForm()
+        {
+            InitializeComponent();
+
+            Text = "Calculator";
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            ClientSize = new Size(260,258);
+
+            // 🔹 Fix lỗi DPI + Font classic
+            AutoScaleMode = AutoScaleMode.None;
+            AutoScaleDimensions = new SizeF(96f,96f);
+            Font = new Font("Microsoft Sans Serif",8.25f);
+
+            // ===== Menu =====
+            var menu = new MenuStrip();
+            menu.Items.Add(new ToolStripMenuItem("Edit"));
+            menu.Items.Add(new ToolStripMenuItem("View"));
+            menu.Items.Add(new ToolStripMenuItem("Help"));
+            MainMenuStrip = menu;
+            Controls.Add(menu);
+
+            // ===== Display (ô hiển thị) =====
+            txtDisplay = new TextBox
+            {
+                ReadOnly = true,
+                TabStop = false,
+                Text = "0",
+                TextAlign = HorizontalAlignment.Right,
+                Font = new Font("Microsoft Sans Serif",12F, FontStyle.Regular),
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(10,30),
+                Size = new Size(238,26)
+            };
+            Controls.Add(txtDisplay);
+
+            // Ô nhỏ xám bên trái (ô M)
+            memIndicator = new TextBox
+            {
+                Enabled = false,
+                BackColor = SystemColors.Control,
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(10,60),
+                Size = new Size(36,20)
+            };
+            Controls.Add(memIndicator);
+
+            // ===== Nút =====
+            Button MakeBtn(string text, int x, int y, int w =45, int h =28)
+            {
+                var b = new Button
+                {
+                    Text = text,
+                    ForeColor = Color.Red,
+                    Location = new Point(x, y),
+                    Size = new Size(w, h),
+                    TabStop = false,
+                    UseVisualStyleBackColor = true
+                };
+                b.Click += Button_Click;
+                Controls.Add(b);
+                return b;
+            }
+
+            // Gốc và khoảng cách
+            int left =10, top =90, gap =5, W =45, H =28;
+
+            // ===== Hàng1: Backspace CE C =====
+            MakeBtn("Backspace", left + (W + gap), top,78, H);
+            MakeBtn("CE", left +2 * (W + gap) +78, top, W, H);
+            MakeBtn("C", left +3 * (W + gap) +78, top, W, H);
+
+            // ===== Cột Memory: MC MR MS M+ =====
+            MakeBtn("MC", left, top + (H + gap) *1, W, H);
+            MakeBtn("MR", left, top + (H + gap) *2, W, H);
+            MakeBtn("MS", left, top + (H + gap) *3, W, H);
+            MakeBtn("M+", left, top + (H + gap) *4, W, H);
+
+            // ===== Hàng2:789 / sqrt =====
+            MakeBtn("7", left + (W + gap), top + (H + gap) *1, W, H);
+            MakeBtn("8", left +2 * (W + gap), top + (H + gap) *1, W, H);
+            MakeBtn("9", left +3 * (W + gap), top + (H + gap) *1, W, H);
+            MakeBtn("/", left +4 * (W + gap), top + (H + gap) *1, W, H);
+            MakeBtn("sqrt", left +5 * (W + gap) -10, top + (H + gap) *1, W, H);
+
+            // ===== Hàng3:456 * % =====
+            MakeBtn("4", left + (W + gap), top + (H + gap) *2, W, H);
+            MakeBtn("5", left +2 * (W + gap), top + (H + gap) *2, W, H);
+            MakeBtn("6", left +3 * (W + gap), top + (H + gap) *2, W, H);
+            MakeBtn("*", left +4 * (W + gap), top + (H + gap) *2, W, H);
+            MakeBtn("%", left +5 * (W + gap) -10, top + (H + gap) *2, W, H);
+
+            // ===== Hàng4:123 -1/x =====
+            MakeBtn("1", left + (W + gap), top + (H + gap) *3, W, H);
+            MakeBtn("2", left +2 * (W + gap), top + (H + gap) *3, W, H);
+            MakeBtn("3", left +3 * (W + gap), top + (H + gap) *3, W, H);
+            MakeBtn("-", left +4 * (W + gap), top + (H + gap) *3, W, H);
+            MakeBtn("1/x", left +5 * (W + gap) -10, top + (H + gap) *3, W, H);
+
+            // ===== Hàng5:0 +/- . = =====
+            MakeBtn("0", left + (W + gap), top + (H + gap) *4, W, H);
+            MakeBtn("+/-", left +2 * (W + gap), top + (H + gap) *4, W, H);
+            MakeBtn(".", left +3 * (W + gap), top + (H + gap) *4, W, H);
+            MakeBtn("+", left +4 * (W + gap), top + (H + gap) *4, W, H);
+            MakeBtn("=", left +5 * (W + gap) -10, top + (H + gap) *4, W, H);
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            var btn = sender as Button;
+            if (btn == null) return;
+            var t = btn.Text;
+
+            double current = ParseDisplay();
+
+            if (t.Length ==1 && char.IsDigit(t[0]))
+            {
+                // Digit
+                if (isNewEntry || txtDisplay.Text == "0")
+                {
+                    txtDisplay.Text = t;
+                    isNewEntry = false;
+                }
+                else
+                {
+                    txtDisplay.Text += t;
+                }
+                return;
+            }
+
+            switch (t)
+            {
+                case ".":
+                    if (isNewEntry)
+                    {
+                        txtDisplay.Text = "0.";
+                        isNewEntry = false;
+                    }
+                    else if (!txtDisplay.Text.Contains("."))
+                    {
+                        txtDisplay.Text += ".";
+                    }
+                    break;
+
+                case "Backspace":
+                    if (!isNewEntry && txtDisplay.Text.Length >0)
+                    {
+                        txtDisplay.Text = txtDisplay.Text.Substring(0, txtDisplay.Text.Length -1);
+                        if (txtDisplay.Text == "" || txtDisplay.Text == "-") txtDisplay.Text = "0";
+                    }
+                    break;
+
+                case "CE":
+                    txtDisplay.Text = "0";
+                    isNewEntry = true;
+                    break;
+
+                case "C":
+                    txtDisplay.Text = "0";
+                    operand = null;
+                    pendingOp = null;
+                    isNewEntry = true;
+                    break;
+
+                case "+/-":
+                    txtDisplay.Text = ToggleSign(txtDisplay.Text);
+                    break;
+
+                case "MC":
+                    memory =0.0;
+                    memIndicator.Text = "";
+                    break;
+
+                case "MR":
+                    txtDisplay.Text = FormatNumber(memory);
+                    isNewEntry = true;
+                    break;
+
+                case "MS":
+                    memory = ParseDisplay();
+                    memIndicator.Text = memory !=0.0 ? "M" : "";
+                    break;
+
+                case "M+":
+                    memory += ParseDisplay();
+                    memIndicator.Text = memory !=0.0 ? "M" : "";
+                    break;
+
+                case "sqrt":
+                    if (current <0)
+                    {
+                        txtDisplay.Text = "Invalid input";
+                    }
+                    else
+                    {
+                        txtDisplay.Text = FormatNumber(Math.Sqrt(current));
+                        isNewEntry = true;
+                    }
+                    break;
+
+                case "1/x":
+                    if (current ==0)
+                    {
+                        txtDisplay.Text = "Cannot divide by zero";
+                    }
+                    else
+                    {
+                        txtDisplay.Text = FormatNumber(1.0 / current);
+                        isNewEntry = true;
+                    }
+                    break;
+
+                case "%":
+                    if (operand.HasValue && pendingOp != null)
+                    {
+                        // percent relative to operand (like Windows)
+                        double result = operand.Value * current /100.0;
+                        txtDisplay.Text = FormatNumber(result);
+                    }
+                    else
+                    {
+                        txtDisplay.Text = FormatNumber(current /100.0);
+                    }
+                    isNewEntry = true;
+                    break;
+
+                case "/":
+                case "*":
+                case "-":
+                case "+":
+                    if (pendingOp != null && !isNewEntry)
+                    {
+                        // evaluate previous
+                        double res = Compute(operand ??0.0, current, pendingOp);
+                        operand = res;
+                        txtDisplay.Text = FormatNumber(res);
+                    }
+                    else
+                    {
+                        operand = ParseDisplay();
+                    }
+                    pendingOp = t;
+                    isNewEntry = true;
+                    break;
+
+                case "=":
+                    if (pendingOp != null)
+                    {
+                        double res = Compute(operand ??0.0, current, pendingOp);
+                        txtDisplay.Text = FormatNumber(res);
+                        operand = null;
+                        pendingOp = null;
+                        isNewEntry = true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private double ParseDisplay()
+        {
+            double v;
+            if (double.TryParse(txtDisplay.Text, NumberStyles.Any, CultureInfo.CurrentCulture, out v)) return v;
+            // try to handle trailing dot (e.g., "12.")
+            var s = txtDisplay.Text.TrimEnd('.');
+            if (double.TryParse(s, NumberStyles.Any, CultureInfo.CurrentCulture, out v)) return v;
+            return0.0;
+        }
+
+        private string FormatNumber(double v)
+        {
+            // Use general format with max precision, trim trailing zeros
+            return v.ToString("G15", CultureInfo.CurrentCulture);
+        }
+
+        private string ToggleSign(string s)
+        {
+            if (s.StartsWith("-")) return s.Substring(1);
+            if (s == "0" || s == "0.") return s;
+            return "-" + s;
+        }
+
+        private double Compute(double left, double right, string op)
+        {
+            switch (op)
+            {
+                case "+": return left + right;
+                case "-": return left - right;
+                case "*": return left * right;
+                case "/":
+                    if (right ==0) return double.NaN;
+                    return left / right;
+                default: return right;
+            }
+        }
+    }
+}

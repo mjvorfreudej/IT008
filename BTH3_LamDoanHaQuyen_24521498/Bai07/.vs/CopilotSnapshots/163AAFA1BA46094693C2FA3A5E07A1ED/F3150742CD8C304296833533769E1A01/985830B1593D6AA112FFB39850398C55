@@ -1,0 +1,257 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Bai07
+{
+    public partial class MainForm : Form
+    {
+        const float BASE_DPI = 96f;
+
+        static readonly Color ColorAvailable = Color.White;
+        static readonly Color ColorSelected = Color.RoyalBlue;
+        static readonly Color ColorSold = Color.Yellow;
+
+        readonly int[] ROW_PRICE = { 5000, 6500, 8000 };
+
+        const int SEAT_W = 90;
+        const int SEAT_H = 70;
+        const int SEAT_GAP = 16;
+
+        private TableLayoutPanel seatsGrid;
+        private TextBox txtThanhTien;
+
+        private Dictionary<int, Button> seatButtons = new Dictionary<int, Button>();
+
+        public MainForm()
+        {
+            InitializeComponent();
+
+            Text = "BÁN VÉ RẠP CHIẾU BÓNG";
+            StartPosition = FormStartPosition.CenterScreen;
+            ClientSize = new Size(820, 580);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+
+            AutoScaleMode = AutoScaleMode.None;
+            AutoScaleDimensions = new SizeF(BASE_DPI, BASE_DPI);
+            Font = new Font("Segoe UI", 10f);
+
+            var pnlScreen = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 72,
+                Padding = new Padding(10),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = SystemColors.ControlLightLight
+            };
+            pnlScreen.Controls.Add(new Label
+            {
+                Dock = DockStyle.Fill,
+                Text = "MÀN ẢNH",
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 18f, FontStyle.Bold),
+                ForeColor = Color.DarkOrange
+            });
+            Controls.Add(pnlScreen);
+
+            var bottom = new TableLayoutPanel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 120,
+                ColumnCount = 3,
+                RowCount = 2,
+                Padding = new Padding(24, 8, 24, 12)
+            };
+            bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+            bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            bottom.RowStyles.Add(new RowStyle(SizeType.Absolute, 44));
+            bottom.RowStyles.Add(new RowStyle(SizeType.Absolute, 56));
+            Controls.Add(bottom);
+
+            var lblThanhTien = new Label
+            {
+                Text = "Thành Tiền:",
+                Anchor = AnchorStyles.Left,
+                AutoSize = true
+            };
+            txtThanhTien = new TextBox
+            {
+                ReadOnly = true,
+                Text = "0",
+                TextAlign = HorizontalAlignment.Right,
+                Dock = DockStyle.Fill
+            };
+            bottom.Controls.Add(lblThanhTien, 0, 0);
+            bottom.Controls.Add(txtThanhTien, 1, 0);
+            bottom.SetColumnSpan(txtThanhTien, 2);
+
+            Button MakeCmd(string text)
+            {
+                return new Button
+                {
+                    Text = text,
+                    Dock = DockStyle.Fill,
+                    Margin = new Padding(8, 4, 8, 4)
+                };
+            }
+            var btnChon = MakeCmd("Chọn");
+            var btnHuy = MakeCmd("Hủy bỏ");
+            var btnEnd = MakeCmd("Kết thúc");
+            btnChon.Click += BtnChon_Click;
+            btnHuy.Click += BtnHuy_Click;
+            btnEnd.Click += (s, e) => Close();
+
+            bottom.Controls.Add(btnChon, 0, 1);
+            bottom.Controls.Add(btnHuy, 1, 1);
+            bottom.Controls.Add(btnEnd, 2, 1);
+
+            var center = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 3,
+                Margin = new Padding(0),
+                Padding = new Padding(0)
+            };
+            center.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            center.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            center.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            center.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            center.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            center.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            Controls.Add(center);
+
+            seatsGrid = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Margin = new Padding(0),
+                Padding = new Padding(0),
+                ColumnCount = 5,
+                RowCount = 3,
+                GrowStyle = TableLayoutPanelGrowStyle.FixedSize
+            };
+            for (int c = 0; c < 5; c++)
+                seatsGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, SEAT_W + (c == 4 ? 0 : SEAT_GAP)));
+            for (int r = 0; r < 3; r++)
+                seatsGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, SEAT_H + (r == 2 ? 0 : SEAT_GAP)));
+
+            BuildSeats();
+            center.Controls.Add(seatsGrid, 1, 1);
+        }
+
+        private void BuildSeats()
+        {
+            int n = 1;
+            for (int r = 0; r < 3; r++)
+            {
+                for (int c = 0; c < 5; c++)
+                {
+                    var btn = new Button
+                    {
+                        Text = n.ToString(),
+                        BackColor = ColorAvailable,
+                        ForeColor = Color.Black,
+                        FlatStyle = FlatStyle.Standard,
+                        Margin = new Padding(0, 0, c == 4 ? 0 : SEAT_GAP, r == 2 ? 0 : SEAT_GAP),
+                        Size = new Size(SEAT_W, SEAT_H),
+                        MinimumSize = new Size(SEAT_W, SEAT_H),
+                        MaximumSize = new Size(SEAT_W, SEAT_H),
+                        Tag = new SeatInfo { Number = n, RowIndex = r, State = SeatState.Available }
+                    };
+                    btn.Click += Seat_Click;
+
+                    seatsGrid.Controls.Add(btn, c, r);
+                    seatButtons[n] = btn;
+                    n++;
+                }
+            }
+        }
+
+        private void Seat_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            SeatInfo info = (SeatInfo)btn.Tag;
+
+            if (info.State == SeatState.Sold)
+            {
+                MessageBox.Show("Vị trí ghế " + info.Number + " đã được bán!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (info.State == SeatState.Available)
+            {
+                info.State = SeatState.Selected;
+                btn.BackColor = ColorSelected;
+                btn.ForeColor = Color.White;
+            }
+            else
+            {
+                info.State = SeatState.Available;
+                btn.BackColor = ColorAvailable;
+                btn.ForeColor = Color.Black;
+            }
+
+            btn.Tag = info;
+            UpdatePreviewMoney();
+        }
+
+        private void BtnChon_Click(object sender, EventArgs e)
+        {
+            int total = 0;
+            foreach (Button btn in seatButtons.Values)
+            {
+                SeatInfo info = (SeatInfo)btn.Tag;
+                if (info.State == SeatState.Selected)
+                {
+                    info.State = SeatState.Sold;
+                    btn.Tag = info;
+                    btn.BackColor = ColorSold;
+                    btn.ForeColor = Color.Black;
+                    total += ROW_PRICE[info.RowIndex];
+                }
+            }
+            txtThanhTien.Text = total.ToString();
+        }
+
+        private void BtnHuy_Click(object sender, EventArgs e)
+        {
+            foreach (Button btn in seatButtons.Values)
+            {
+                SeatInfo info = (SeatInfo)btn.Tag;
+                if (info.State == SeatState.Selected)
+                {
+                    info.State = SeatState.Available;
+                    btn.Tag = info;
+                    btn.BackColor = ColorAvailable;
+                    btn.ForeColor = Color.Black;
+                }
+            }
+            txtThanhTien.Text = "0";
+        }
+
+        private void UpdatePreviewMoney()
+        {
+            int preview = 0;
+            foreach (Button btn in seatButtons.Values)
+            {
+                SeatInfo info = (SeatInfo)btn.Tag;
+                if (info.State == SeatState.Selected)
+                    preview += ROW_PRICE[info.RowIndex];
+            }
+            txtThanhTien.Text = preview.ToString();
+        }
+
+        private struct SeatInfo
+        {
+            public int Number;
+            public int RowIndex;
+            public SeatState State;
+        }
+        private enum SeatState { Available, Selected, Sold }
+    }
+}
