@@ -1,0 +1,145 @@
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+namespace Bai08
+{
+    public partial class MainForm : Form
+    {
+        private int centerX, centerY;
+        private int radius;
+
+        public MainForm()
+        {
+            InitializeComponent();
+            this.DoubleBuffered = true;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            centerX = this.ClientSize.Width / 2;
+            centerY = this.ClientSize.Height / 2;
+            radius = Math.Min(centerX, centerY) - 20;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.Invalidate();
+        }
+
+        private void MainForm_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Vẽ nền đen
+            g.Clear(Color.Black);
+
+            // Vẽ các điểm đánh dấu giờ và phút
+            DrawClockMarkers(g);
+
+            // Lấy thời gian hiện tại
+            DateTime now = DateTime.Now;
+            int hour = now.Hour % 12;
+            int minute = now.Minute;
+            int second = now.Second;
+
+            // Vẽ kim giờ (hình thoi)
+            DrawHand(g, (hour + minute / 60.0) * 30 - 90, radius * 0.5, 8, Color.White, true);
+
+            // Vẽ kim phút (hình thoi)
+            DrawHand(g, (minute + second / 60.0) * 6 - 90, radius * 0.7, 6, Color.White, true);
+
+            // Vẽ kim giây (đường thẳng)
+            DrawHand(g, second * 6 - 90, radius * 0.85, 1, Color.White, false);
+
+            // Vẽ tâm đồng hồ
+            g.FillEllipse(Brushes.White, centerX - 5, centerY - 5, 10, 10);
+        }
+
+        private void DrawClockMarkers(Graphics g)
+        {
+            for (int i = 0; i < 60; i++)
+            {
+                double angle = i * 6 * Math.PI / 180;
+                int x = (int)(centerX + radius * Math.Cos(angle - Math.PI / 2));
+                int y = (int)(centerY + radius * Math.Sin(angle - Math.PI / 2));
+
+                if (i % 5 == 0)
+                {
+                    // Điểm đánh dấu giờ (lớn hơn)
+                    g.FillEllipse(Brushes.White, x - 8, y - 8, 16, 16);
+                }
+                else
+                {
+                    // Điểm đánh dấu phút (nhỏ hơn)
+                    g.FillEllipse(Brushes.White, x - 3, y - 3, 6, 6);
+                }
+            }
+        }
+
+        private void DrawHand(Graphics g, double angleDegrees, double length, int width, Color color, bool isDiamond = false)
+        {
+            double angleRadians = angleDegrees * Math.PI / 180;
+
+            if (isDiamond)
+            {
+                // Vẽ kim dạng hình thoi
+                int tipX = (int)(centerX + length * Math.Cos(angleRadians));
+                int tipY = (int)(centerY + length * Math.Sin(angleRadians));
+
+                int tailX = (int)(centerX - length * 0.3 * Math.Cos(angleRadians));
+                int tailY = (int)(centerY - length * 0.3 * Math.Sin(angleRadians));
+
+                // Điểm giữa rộng của hình thoi (vuông góc với trục kim)
+                double perpAngle = angleRadians + Math.PI / 2;
+                int midX1 = (int)(centerX + width * Math.Cos(perpAngle));
+                int midY1 = (int)(centerY + width * Math.Sin(perpAngle));
+                int midX2 = (int)(centerX - width * Math.Cos(perpAngle));
+                int midY2 = (int)(centerY - width * Math.Sin(perpAngle));
+
+                // Vẽ hình thoi bằng 4 đường thẳng
+                Point[] diamond = new Point[]
+                {
+                    new Point(tipX, tipY),
+                    new Point(midX1, midY1),
+                    new Point(tailX, tailY),
+                    new Point(midX2, midY2)
+                };
+
+                using (Pen pen = new Pen(color, 1))
+                {
+                    g.DrawPolygon(pen, diamond);
+                }
+            }
+            else
+            {
+                // Vẽ kim thường (cho kim giây)
+                int endX = (int)(centerX + length * Math.Cos(angleRadians));
+                int endY = (int)(centerY + length * Math.Sin(angleRadians));
+
+                using (Pen pen = new Pen(color, width))
+                {
+                    g.DrawLine(pen, centerX, centerY, endX, endY);
+                }
+
+                // Vẽ đuôi kim
+                int tailX = (int)(centerX - length * 0.2 * Math.Cos(angleRadians));
+                int tailY = (int)(centerY - length * 0.2 * Math.Sin(angleRadians));
+                using (Pen pen = new Pen(color, width))
+                {
+                    g.DrawLine(pen, centerX, centerY, tailX, tailY);
+                }
+            }
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            centerX = this.ClientSize.Width / 2;
+            centerY = this.ClientSize.Height / 2;
+            radius = Math.Min(centerX, centerY) - 20;
+            this.Invalidate();
+        }
+    }
+}

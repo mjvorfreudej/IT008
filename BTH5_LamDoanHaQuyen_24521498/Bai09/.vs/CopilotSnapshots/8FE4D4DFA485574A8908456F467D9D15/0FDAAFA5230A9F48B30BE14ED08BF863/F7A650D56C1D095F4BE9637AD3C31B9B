@@ -1,0 +1,71 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Bai09
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+            cboShapes.SelectedIndex = 0;
+        }
+
+        private void cboShapes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pnlDraw.Invalidate();
+        }
+
+        private void pnlDraw_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            int x = 50;
+            int y = 30;
+            int width = 150;
+            int height = 120;
+
+            Pen pen = new Pen(Color.DarkRed, 2);
+            Brush brush = new SolidBrush(Color.DarkRed);
+
+            string selectedShape = cboShapes.SelectedItem?.ToString() ?? "";
+
+            switch (selectedShape)
+            {
+                case "Circle":
+                    g.DrawEllipse(pen, x, y, width, width);
+                    break;
+                case "Square":
+                    g.DrawRectangle(pen, x, y, width, width);
+                    break;
+                case "Ellipse":
+                    g.DrawEllipse(pen, x, y, width, height);
+                    break;
+                case "Pie":
+                    g.DrawPie(pen, x, y, width, height, 0, 270);
+                    break;
+                case "Filled Circle":
+                    g.FillEllipse(brush, x, y, width, width);
+                    g.DrawEllipse(pen, x, y, width, width);
+                    break;
+                case "Filled Square":
+                    g.FillRectangle(brush, x, y, width, width);
+                    g.DrawRectangle(pen, x, y, width, width);
+                    break;
+                case "Filled Ellipse":
+                    g.FillEllipse(brush, x, y, width, height);
+                    g.DrawEllipse(pen, x, y, width, height);
+                    break;
+                case "Filled Pie":
+                    g.FillPie(brush, x, y, width, height, 0, 270);
+                    g.DrawPie(pen, x, y, width, height, 0, 270);
+                    break;
+            }
+
+            pen.Dispose();
+            brush.Dispose();
+        }
+    }
+}

@@ -1,0 +1,223 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Bai11
+{
+    public partial class MainForm : Form
+    {
+        // Bitmap để lưu trữ hình vẽ
+        private Bitmap bitmap;
+        // Graphics để vẽ lên bitmap
+        private Graphics graphics;
+        // Cờ đánh dấu đang vẽ hay không
+        private bool isDrawing = false;
+        // Điểm bắt đầu khi nhấn chuột
+        private Point startPoint;
+        // Điểm kết thúc khi di chuyển/nhả chuột
+        private Point endPoint;
+        // Màu vẽ đường thẳng
+        private Color penColor = Color.Black;
+        // Bitmap tạm để hiển thị preview khi đang kéo chuột
+        private Bitmap tempBitmap;
+
+        public MainForm()
+        {
+            InitializeComponent();
+            // Khởi tạo bitmap khi form load
+            InitializeBitmap();
+        }
+
+        // Khởi tạo bitmap với kích thước của pictureBox
+        private void InitializeBitmap()
+        {
+            bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            graphics = Graphics.FromImage(bitmap);
+            graphics.Clear(Color.White);
+            pictureBox.Image = bitmap;
+        }
+
+        // Sự kiện click nút Color để chọn màu vẽ đường
+        private void btnColor_Click(object sender, EventArgs e)
+        {
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                penColor = colorDialog.Color;
+            }
+        }
+
+        // Sự kiện nhấn chuột xuống - bắt đầu vẽ
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDrawing = true;
+                // Lưu điểm bắt đầu
+                startPoint = e.Location;
+                endPoint = e.Location;
+                // Tạo bản sao bitmap để vẽ preview
+                tempBitmap = (Bitmap)bitmap.Clone();
+            }
+        }
+
+        // Sự kiện di chuyển chuột - hiển thị preview hình đang vẽ
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDrawing && e.Button == MouseButtons.Left)
+            {
+                endPoint = e.Location;
+                // Vẽ preview hình lên tempBitmap
+                DrawPreview();
+            }
+        }
+
+        // Sự kiện nhả chuột - hoàn thành vẽ hình
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (isDrawing)
+            {
+                isDrawing = false;
+                endPoint = e.Location;
+                // Vẽ hình cuối cùng lên bitmap chính
+                DrawFinalShape();
+                // Giải phóng bitmap tạm
+                if (tempBitmap != null)
+                {
+                    tempBitmap.Dispose();
+                    tempBitmap = null;
+                }
+            }
+        }
+
+        // Vẽ preview khi đang kéo chuột
+        private void DrawPreview()
+        {
+            // Tạo bản sao từ bitmap gốc để vẽ preview
+            Bitmap previewBitmap = (Bitmap)bitmap.Clone();
+            using (Graphics g = Graphics.FromImage(previewBitmap))
+            {
+                DrawShapeOnGraphics(g, startPoint, endPoint);
+            }
+            pictureBox.Image = previewBitmap;
+        }
+
+        // Vẽ hình cuối cùng lên bitmap chính
+        private void DrawFinalShape()
+        {
+            DrawShapeOnGraphics(graphics, startPoint, endPoint);
+            pictureBox.Image = bitmap;
+            pictureBox.Invalidate();
+        }
+
+        // Vẽ hình lên đối tượng Graphics
+        private void DrawShapeOnGraphics(Graphics g, Point start, Point end)
+        {
+            // Lấy độ dày nét vẽ từ textbox
+            int width = 1;
+            int.TryParse(txtWidth.Text, out width);
+            if (width < 1) width = 1;
+
+            if (rbLine.Checked)
+            {
+                // Vẽ đường thẳng với màu và độ dày đã chọn
+                using (Pen pen = new Pen(penColor, width))
+                {
+                    g.DrawLine(pen, start, end);
+                }
+            }
+            else
+            {
+                // Tính toán hình chữ nhật bao quanh
+                Rectangle rect = GetRectangle(start, end);
+                if (rect.Width > 0 && rect.Height > 0)
+                {
+                    // Lấy brush tương ứng đã chọn
+                    using (Brush brush = GetSelectedBrush(rect))
+                    {
+                        if (rbRectangle.Checked)
+                        {
+                            // Tô hình chữ nhật
+                            g.FillRectangle(brush, rect);
+                        }
+                        else if (rbEllipse.Checked)
+                        {
+                            // Tô hình Ellipse
+                            g.FillEllipse(brush, rect);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Tính toán hình chữ nhật từ 2 điểm bắt đầu và kết thúc
+        private Rectangle GetRectangle(Point start, Point end)
+        {
+            int x = Math.Min(start.X, end.X);
+            int y = Math.Min(start.Y, end.Y);
+            int width = Math.Abs(start.X - end.X);
+            int height = Math.Abs(start.Y - end.Y);
+            return new Rectangle(x, y, width, height);
+        }
+
+        // Lấy Brush tương ứng với lựa chọn của người dùng
+        private Brush GetSelectedBrush(Rectangle rect)
+        {
+            if (rbSolidBrush.Checked)
+            {
+                // SolidBrush: tô màu Green
+                return new SolidBrush(Color.Green);
+            }
+            else if (rbHatchBrush.Checked)
+            {
+                // HatchBrush: kiểu Horizontal với 2 màu Blue và Green
+                return new HatchBrush(HatchStyle.Horizontal, Color.Blue, Color.Green);
+            }
+            else if (rbTextureBrush.Checked)
+            {
+                // TextureBrush: tô với bitmap cho trước
+                Bitmap textureBitmap = CreateTextureBitmap();
+                return new TextureBrush(textureBitmap);
+            }
+            else if (rbLinearGradientBrush.Checked)
+            {
+                // LinearGradientBrush: kiểu Vertical với 2 màu Red và Green
+                if (rect.Width > 0 && rect.Height > 0)
+                {
+                    return new LinearGradientBrush(rect, Color.Red, Color.Green, LinearGradientMode.Vertical);
+                }
+                else
+                {
+                    return new SolidBrush(Color.Green);
+                }
+            }
+            // Mặc định trả về SolidBrush màu Green
+            return new SolidBrush(Color.Green);
+        }
+
+        // Tạo bitmap mẫu cho TextureBrush
+        private Bitmap CreateTextureBitmap()
+        {
+            // Tạo bitmap pattern đơn giản
+            Bitmap textureBmp = new Bitmap(20, 20);
+            using (Graphics g = Graphics.FromImage(textureBmp))
+            {
+                g.Clear(Color.White);
+                using (Pen pen = new Pen(Color.Blue, 1))
+                {
+                    // Vẽ hình ellipse và các đường kẻ tạo pattern
+                    g.DrawEllipse(pen, 2, 2, 15, 15);
+                    g.DrawLine(pen, 0, 10, 20, 10);
+                    g.DrawLine(pen, 10, 0, 10, 20);
+                }
+            }
+            return textureBmp;
+        }
+    }
+}

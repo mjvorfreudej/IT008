@@ -1,0 +1,94 @@
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+namespace Bai10
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+            InitializeComboBoxes();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            // Kiểu nét đứt
+            cboDashStyle.DataSource = Enum.GetValues(typeof(DashStyle));
+            cboDashStyle.SelectedItem = DashStyle.Custom;
+
+            // Độ rộng bút vẽ
+            for (int i = 1; i <= 20; i++)
+            {
+                cboWidth.Items.Add(i);
+            }
+            cboWidth.SelectedItem = 8;
+
+            // Kiểu nối đường
+            cboLineJoin.DataSource = Enum.GetValues(typeof(LineJoin));
+            cboLineJoin.SelectedItem = LineJoin.Round;
+
+            // Kiểu đầu nét đứt
+            cboDashCap.DataSource = Enum.GetValues(typeof(DashCap));
+            cboDashCap.SelectedItem = DashCap.Triangle;
+
+            // Kiểu đầu bắt đầu
+            cboStartCap.DataSource = Enum.GetValues(typeof(LineCap));
+            cboStartCap.SelectedItem = LineCap.ArrowAnchor;
+
+            // Kiểu đầu kết thúc
+            cboEndCap.DataSource = Enum.GetValues(typeof(LineCap));
+            cboEndCap.SelectedItem = LineCap.DiamondAnchor;
+        }
+
+        // Xử lý sự kiện khi thay đổi thuộc tính bút vẽ
+        private void OnPenPropertyChanged(object sender, EventArgs e)
+        {
+            pnlDraw.Invalidate();
+        }
+
+        // Xử lý sự kiện vẽ trên panel
+        private void pnlDraw_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Lấy các giá trị đã chọn từ ComboBox
+            DashStyle dashStyle = (DashStyle)cboDashStyle.SelectedItem;
+            int width = (int)cboWidth.SelectedItem;
+            LineJoin lineJoin = (LineJoin)cboLineJoin.SelectedItem;
+            DashCap dashCap = (DashCap)cboDashCap.SelectedItem;
+            LineCap startCap = (LineCap)cboStartCap.SelectedItem;
+            LineCap endCap = (LineCap)cboEndCap.SelectedItem;
+
+            // Tạo bút vẽ với các thuộc tính đã chọn
+            using (Pen pen = new Pen(Color.Red, width))
+            {
+                pen.DashStyle = dashStyle;
+                pen.LineJoin = lineJoin;
+                pen.DashCap = dashCap;
+                pen.StartCap = startCap;
+                pen.EndCap = endCap;
+
+                // Thiết lập mẫu nét đứt tùy chỉnh
+                if (dashStyle == DashStyle.Custom)
+                {
+                    pen.DashPattern = new float[] { 1, 2 };
+                }
+
+                // Vẽ đường để minh họa các thuộc tính của bút vẽ
+                Point[] points = new Point[]
+                {
+                    new Point(30, 150),
+                    new Point(60, 50),
+                    new Point(120, 100),
+                    new Point(150, 30)
+                };
+
+                g.DrawLines(pen, points);
+            }
+        }
+    }
+}

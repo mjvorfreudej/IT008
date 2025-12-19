@@ -1,0 +1,98 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Bai10
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+            InitializeComboBoxes();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            // Dash Style
+            cboDashStyle.DataSource = Enum.GetValues(typeof(DashStyle));
+            cboDashStyle.SelectedItem = DashStyle.Custom;
+
+            // Width
+            for (int i = 1; i <= 20; i++)
+            {
+                cboWidth.Items.Add(i);
+            }
+            cboWidth.SelectedItem = 8;
+
+            // Line Join
+            cboLineJoin.DataSource = Enum.GetValues(typeof(LineJoin));
+            cboLineJoin.SelectedItem = LineJoin.Round;
+
+            // Dash Cap
+            cboDashCap.DataSource = Enum.GetValues(typeof(DashCap));
+            cboDashCap.SelectedItem = DashCap.Triangle;
+
+            // Start Cap
+            cboStartCap.DataSource = Enum.GetValues(typeof(LineCap));
+            cboStartCap.SelectedItem = LineCap.ArrowAnchor;
+
+            // End Cap
+            cboEndCap.DataSource = Enum.GetValues(typeof(LineCap));
+            cboEndCap.SelectedItem = LineCap.DiamondAnchor;
+        }
+
+        private void OnPenPropertyChanged(object sender, EventArgs e)
+        {
+            pnlDraw.Invalidate();
+        }
+
+        private void pnlDraw_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Get selected values
+            DashStyle dashStyle = (DashStyle)cboDashStyle.SelectedItem;
+            int width = (int)cboWidth.SelectedItem;
+            LineJoin lineJoin = (LineJoin)cboLineJoin.SelectedItem;
+            DashCap dashCap = (DashCap)cboDashCap.SelectedItem;
+            LineCap startCap = (LineCap)cboStartCap.SelectedItem;
+            LineCap endCap = (LineCap)cboEndCap.SelectedItem;
+
+            // Create pen with selected properties
+            using (Pen pen = new Pen(Color.Red, width))
+            {
+                pen.DashStyle = dashStyle;
+                pen.LineJoin = lineJoin;
+                pen.DashCap = dashCap;
+                pen.StartCap = startCap;
+                pen.EndCap = endCap;
+
+                // Custom dash pattern for Custom style
+                if (dashStyle == DashStyle.Custom)
+                {
+                    pen.DashPattern = new float[] { 1, 2 };
+                }
+
+                // Draw a path to demonstrate pen properties
+                Point[] points = new Point[]
+                {
+                    new Point(30, 150),
+                    new Point(60, 50),
+                    new Point(120, 100),
+                    new Point(150, 30)
+                };
+
+                g.DrawLines(pen, points);
+            }
+        }
+    }
+}
